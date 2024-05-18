@@ -48,5 +48,6 @@ begin
 
     axislegend(axl, position = :lb, labelsize = 15)
     save("figs/error_ICM_Ewald2D.png", f)
+    save("figs/error_ICM_Ewald2D.pdf", f)
     f
 end
