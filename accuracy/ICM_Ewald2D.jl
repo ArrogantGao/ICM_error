@@ -3,7 +3,7 @@ using ExTinyMD, EwaldSummations, CairoMakie, LaTeXStrings
 n_atoms = 32
 Lxy = 10.0
 Lz = 1.0
-L = (Lxy, Lxy, L_z)
+L = (Lxy, Lxy, Lz)
 boundary = ExTinyMD.Q2dBoundary(Lxy, Lxy, Lz)
 
 atoms = Vector{Atom{Float64}}()
