@@ -24,7 +24,7 @@ coords = [p_info.position for p_info in info.particle_info]
 charge = [atoms[p_info.id].charge for p_info in info.particle_info]
 
 Δs = [0.6, 0.95, 1.0]
-N_imgs = [1:8...]
+N_imgs = [3, 4, 6, 8, 10, 12, 14, 16]
 N_slabs = [3, 5, 7]
 
 data_file = "data/ICM_Ewald3D_2-1.csv"

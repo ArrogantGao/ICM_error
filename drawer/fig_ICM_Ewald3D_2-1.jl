@@ -19,9 +19,9 @@ begin
     axc = Axis(gb[1, 1], xlabel = L"N_{img}", yscale = log10, title = L"\Delta = 0.95")
     axl = Axis(gc[1, 1], xlabel = L"N_{img}", yscale = log10, title = L"\Delta = 1.0")
 
-    xlims!(axr, 2, 16)
-    xlims!(axc, 2, 16)
-    xlims!(axl, 2, 16)
+    # xlims!(axr, 2, 16)
+    # xlims!(axc, 2, 16)
+    # xlims!(axl, 2, 16)
 
     ylims!(axr, 1e-9, 1e1)
     ylims!(axc, 1e-9, 1e1)
@@ -39,7 +39,7 @@ begin
         for (i, N_slab) in enumerate(N_slabs)
             for (j, γ) in enumerate([(Δ, Δ), (-Δ, -Δ), (-Δ, Δ)])
                 dfγ = df[(df.N_slab .== N_slab) .& (df.γ1 .== γ[1]) .& (df.γ2 .== γ[2]), :]
-                ln = scatterlines!(ax, 2 .* dfγ.N_img, dfγ.error_r, label = L"N_{slab} = %$N_slab", color = colors[i], linestyle = ls[j])
+                ln = scatterlines!(ax, dfγ.N_img, dfγ.error_r, label = L"N_{slab} = %$N_slab", color = colors[i], linestyle = ls[j])
                 push!(lns, ln)
             end
         end
