@@ -30,16 +30,22 @@ begin
     colors = [:black, :blue, :red]
     ls = [:solid, :dash, :dot]
 
+    lelement = [LineElement(linestyle = l, color = :black) for l in ls]
+    lname = [L"\gamma = (\Delta, \Delta)", L"\gamma = (-\Delta, -\Delta)", L"\gamma = (-\Delta, \Delta)"]
+
+    lns = []
+
     for (Δ, ax) in [(0.6, axr), (0.95, axc), (1.0, axl)]
         for (i, N_slab) in enumerate(N_slabs)
             for (j, γ) in enumerate([(Δ, Δ), (-Δ, -Δ), (-Δ, Δ)])
                 dfγ = df[(df.N_slab .== N_slab) .& (df.γ1 .== γ[1]) .& (df.γ2 .== γ[2]), :]
-                scatterlines!(ax, 2 .* dfγ.N_img, dfγ.error_r, label = L"N_{slab} = %$N_slab", color = colors[i], linestyle = ls[j])
+                ln = scatterlines!(ax, 2 .* dfγ.N_img, dfγ.error_r, label = L"N_{slab} = %$N_slab", color = colors[i], linestyle = ls[j])
+                push!(lns, ln)
             end
         end
     end
 
-    axislegend(axr, position = :lt, labelsize = 15, merge = true, unique = true)
+    axislegend(axr, position = :lt, labelsize = 20, merge = true, unique = true)
 
     save("figs/error_ICM_Ewald3D_2-1.png", f)
     save("figs/error_ICM_Ewald3D_2-1.pdf", f)
