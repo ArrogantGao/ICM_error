@@ -24,7 +24,7 @@ coords = [p_info.position for p_info in info.particle_info]
 charge = [atoms[p_info.id].charge for p_info in info.particle_info]
 
 Δs = [0.6, 0.95, 1.0]
-N_imgs = [3, 4, 6, 8, 10, 12, 14, 16]
+N_imgs = [2:2:16...]
 N_slabs = [3, 5, 7]
 
 data_file = "data/ICM_Ewald3D_2-1.csv"
@@ -33,13 +33,14 @@ for Δ in Δs
     for γ in [(Δ, Δ), (-Δ, -Δ), (-Δ, Δ)]
         ICMEwald2D_Interaction = IcmEwald2DInteraction(n_atoms, 6.0, 1.0, γ, L, 20)
         energy_exact = ICMEwald2D_energy(ICMEwald2D_Interaction, coords, charge)
-        for N_slab in N_slabs
+        for n_slab in N_slabs
             for N_img in N_imgs
+                N_slab = (3 * n_slab - 1) ÷ 2
                 ICMEwald3D_interaction = IcmEwald3DInteraction(n_atoms, 4.0, 1.0, γ, L, N_img, N_slab)
                 energy_ewald = ICMEwald3D_energy(ICMEwald3D_interaction, coords, charge)
                 er = abs(energy_ewald - energy_exact) / abs(energy_exact)
                 @show N_img, N_slab, γ, er
-                df = DataFrame(N_img = N_img, N_slab = N_slab, γ1 = γ[1], γ2 = γ[2], E_exact = energy_exact, E_ewald = energy_ewald, error_r = er)
+                df = DataFrame(N_img = N_img, N_slab = n_slab, γ1 = γ[1], γ2 = γ[2], E_exact = energy_exact, E_ewald = energy_ewald, error_r = er)
                 CSV.write(data_file, df, append = true)
             end
         end
