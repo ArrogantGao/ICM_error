@@ -13,3 +13,11 @@ run_ICM_Ewald3D:
 	echo "N_img,N_slab,γ1,γ2,E_exact,E_ewald,error_r" >> data/ICM_Ewald3D_2-1.csv
 	julia --project=. -t 8 accuracy/ICM_Ewald3D.jl
 	julia --project=. drawer/fig_ICM_Ewald3D_2-1.jl
+
+run_ICM_Ewald2D:
+	touch data/ICM_Ewald2D_2-1.csv
+	rm data/ICM_Ewald2D_2-1.csv
+	touch data/ICM_Ewald2D_2-1.csv
+	echo "N_img,γ1,γ2,E_exact,E_ewald,error_r" >> data/ICM_Ewald2D_2-1.csv
+	julia --project=. -t 8 accuracy/ICM_Ewald2D.jl
+	julia --project=. drawer/fig_ICM_Ewald2D_2-1.jl
