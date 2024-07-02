@@ -32,12 +32,12 @@ data_file = "data/ICM_Ewald3D_2-1.csv"
 for Δ in Δs
     for γ in [(Δ, Δ), (-Δ, -Δ), (-Δ, Δ)]
         ICMEwald2D_Interaction = IcmEwald2DInteraction(n_atoms, 6.0, 1.0, γ, L, 20)
-        energy_exact = ICMEwald2D_energy(ICMEwald2D_Interaction, coords, charge)
+        energy_exact = ICM_Ewald2D_energy(ICMEwald2D_Interaction, coords, charge)
         for n_slab in N_slabs
             for N_img in N_imgs
                 N_slab = (3 * n_slab - 1) ÷ 2
-                ICMEwald3D_interaction = IcmEwald3DInteraction(n_atoms, 4.0, 1.0, γ, L, N_img, N_slab)
-                energy_ewald = ICMEwald3D_energy(ICMEwald3D_interaction, coords, charge)
+                ICMEwald3D_interaction = IcmEwald3DInteraction(n_atoms, 6.0, 1.0, γ, L, N_img, N_slab)
+                energy_ewald = ICM_Ewald3D_energy(ICMEwald3D_interaction, coords, charge)
                 er = abs(energy_ewald - energy_exact) / abs(energy_exact)
                 @show N_img, N_slab, γ, er
                 df = DataFrame(N_img = N_img, N_slab = n_slab, γ1 = γ[1], γ2 = γ[2], E_exact = energy_exact, E_ewald = energy_ewald, error_r = er)
