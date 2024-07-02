@@ -14,7 +14,7 @@ begin
     f = Figure(backgroundcolor = RGBf(1.0, 1.0, 1.0), size = (500, 700), fontsize = 20)
     ga = f[1, 1]
     gb = f[2, 1]
-    axr = Axis(ga, xlabel = L"M", ylabel = L"$\mathcal{E}_r$ (Error)", title = L"\gamma_u = \gamma_d = 0.95", yscale = log10)
+    axr = Axis(ga, xlabel = L"M", ylabel = L"$\mathcal{E}_r$ (Energy)", title = L"\gamma_u = \gamma_d = 0.95", yscale = log10)
     axl = Axis(gb, xlabel = L"M", ylabel = L"$\mathcal{E}_r$ (Force)", yscale = log10)
     ylims!(axr, 1e-11, 1e2)
     ylims!(axl, 1e-11, 1e2)
@@ -48,7 +48,7 @@ begin
         lines!(axl, [2:16...], fe.([2:16...]), color = colors[i], linestyle = :dash)
     end
 
-    axislegend(axr, position = :lt, labelsize = 20, merge = true, unique = true)
+    axislegend(axr, position = :lt, labelsize = 18, merge = true, unique = true)
 
     text!(axr, (2, 10^(-9)), text = "(a)", fontsize = 30, align = (:left, :baseline))
     text!(axl, (2, 10^(-9)), text = "(b)", fontsize = 30, align = (:left, :baseline))
