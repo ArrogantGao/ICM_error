@@ -3,20 +3,27 @@ using CairoMakie, LaTeXStrings
 using LsqFit
 
 data_file = "data/truncate_error.csv"
+data_file_force = "data/truncate_error_force.csv"
 
 df = CSV.read(data_file, DataFrame)
+df_force = CSV.read(data_file_force, DataFrame)
 
 N_imgs = unique(df.N_img)
 
 begin
 
-    f = Figure(backgroundcolor = RGBf(1.0, 1.0, 1.0), size = (500, 400), fontsize = 20)
+    f = Figure(backgroundcolor = RGBf(1.0, 1.0, 1.0), size = (500, 700), fontsize = 20)
     ga = f[1, 1] = GridLayout()
+    gb = f[2, 1] = GridLayout()
 
-    axr = Axis(ga[1, 1], xlabel = L"M", ylabel = L"\mathcal{E}_r", yscale = log10, title = L"\gamma_u = \gamma_d = \gamma")
+    axr = Axis(ga[1, 1], xlabel = L"M", ylabel = L"$\mathcal{E}_r$ (Energy)", yscale = log10, title = L"\gamma_u = \gamma_d = \gamma")
+    axl = Axis(gb[1, 1], xlabel = L"M", ylabel = L"$\mathcal{E}_r$ (Force)", yscale = log10)
 
     xlims!(axr, 0, 18)
     ylims!(axr, 1e-16, 1e-2)
+
+    xlims!(axl, 0, 18)
+    ylims!(axl, 1e-16, 1e-2)
 
     colors = [:blue, :red, :green]
     ls = [:solid, :dash, :dot]
@@ -40,12 +47,27 @@ begin
             @show fit.param[1]
 
             lines!(axr, [0:16...], exp.(model([0:16...], fit.param)), color = colors[i], linestyle = :dash)
+
+            df_forceγ = df_force[(df_force.γ1 .== γ[1]) .& (df_force.γ2 .== γ[2]), :]
+            ln = scatter!(axl, df_forceγ.N_img, df_forceγ.error_r .+ 1e-15, color = colors[i])
+
+            @. model(x, p) = log.(abs.(p[1] * Δ^(x) * exp(-2π * (x - 1) * 5 / 15) ))
+            raw_y_data = df_forceγ.error_r
+            raw_x_data = df_forceγ.N_img
+            n = findfirst(x -> x < 1e-14, raw_y_data)
+            x_data = raw_x_data[1:n]
+            y_data = raw_y_data[1:n]
+            p0 = [1.0]
+            fit = curve_fit(model, x_data, log.(abs.(y_data)), p0)
+            lines!(axl, [0:16...], exp.(model([0:16...], fit.param)), color = colors[i], linestyle = :dash)
+
         end
     end
 
     axislegend(axr, position = :rt, labelsize = 20)
 
-    text!(axr, (16, 10^(-8)), text = L"\mathcal{O}\left(\gamma^{M + 1} e^{-{2\pi(M+1)H}/{L_x}}\right)", fontsize = 20, align = (:right, :baseline),)
+    text!(axr, (1, 10^(-15)), text = "(a)", fontsize = 30, align = (:left, :baseline))
+    text!(axl, (1, 10^(-15)), text = "(b)", fontsize = 30, align = (:left, :baseline))
 
     save("figs/truncate_error.png", f)
     save("figs/truncate_error.pdf", f)
